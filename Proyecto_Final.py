@@ -50,6 +50,9 @@ class GTree:
 
 class TicTacToe:
     def __init__(self):
+        self.initialize_game()
+
+    def initialize_game(self):
         self.board = ['-' for _ in range(9)]
         if random.randint(0, 1) == 1:
             self.humanPLayer = 'X'
@@ -60,6 +63,7 @@ class TicTacToe:
         self.current_nodo = str(self.board)########################################
         tree.node(self.current_nodo, self.current_nodo)########################################
         self.game_tree = GTree(self.board.copy())##########################
+
 
     def show_board(self):
         print("")
@@ -101,6 +105,11 @@ class TicTacToe:
         return False
 
     def start(self):
+        while True:
+            self.play_game()
+            if not self.play_again():
+                break
+    def play_game(self):
         bot = ComputerPlayer(self.botPlayer)
         human = humanPLayer(self.humanPLayer)
         while True:
@@ -143,7 +152,18 @@ class TicTacToe:
 
         tree.render('Arbol',view=True, format='svg', cleanup=True)##########################
 
+    def play_again(self):
+        while True:
+            preg = input("Quieres jugar otra vez? y/n: ").lower()
+            if preg in ['y', 'n']:
+                break
+        if preg == 'y':
+            self.reset_game()
+            return True
+        return False
     
+    def reset_game(self):
+        self.initialize_game()
 
 class humanPLayer:
     def __init__(self,letter):
@@ -231,23 +251,4 @@ class ComputerPlayer(TicTacToe):
 
 # starting the game
 tic_tac_toe = TicTacToe()
-while True:
-    print("1. Iniciar juego.\n")
-    print("2. Imprimir arbol.\n")
-    print("3. Salir.")
-    try:#utilizo el try como trato, para
-        opc = int(input("Seleccione una opcion para continuar: "))#trato de leer el valor ingresado por el usuario, convertirlo en un entero
-    except ValueError as e:#si no sale bien el proceso porque el usuario introdujo un valor erroneo entonces
-        print("Error: Porfavor ingrese una opcion valida")#imprimo que hubo un error 
-        print(f"Error: {e}")#imprimo el error en especifico
-    if opc == 1:
-        tic_tac_toe.start()
-        print("Reiniciando...")
-    elif opc == 2:
-        print("\nArbol del juego:")#############################
-        tic_tac_toe.game_tree.print_tree()#############################
-    elif opc == 3:
-        print("Saliendo....")
-        break
-    else:
-        print("Opcion invalida.")
+tic_tac_toe.start()
